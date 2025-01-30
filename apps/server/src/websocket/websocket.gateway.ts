@@ -22,7 +22,7 @@ export class WebsocketGateway implements OnModuleInit {
     const token = socket.handshake.auth.token;
 
     if (!token) {
-      this.kickSocket(socket.id, "Unauthorized");
+      return this.kickSocket(socket.id, "Unauthorized");
     }
 
     const tokenDoc = await this.prisma.token.findUnique({
@@ -35,11 +35,11 @@ export class WebsocketGateway implements OnModuleInit {
     });
 
     if (!tokenDoc) {
-      this.kickSocket(socket.id, "Unauthorized");
+      return this.kickSocket(socket.id, "Unauthorized");
     }
 
     if (tokenDoc.expiresAt < new Date()) {
-      this.kickSocket(socket.id, "Token expired");
+      return this.kickSocket(socket.id, "Token expired");
     }
 
     this.connectedSockets.set(socket.id, { socket, user: tokenDoc.user });
