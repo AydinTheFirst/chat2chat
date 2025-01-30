@@ -80,6 +80,7 @@ export default function ViewChannel() {
 const SubmitForm = () => {
   const { channelId } = useParams();
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const SubmitForm = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [message]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -111,7 +112,7 @@ const SubmitForm = () => {
 
   const handleSend = async () => {
     if (message.trim() === "") {
-      return toast.error("Message cannot be empty");
+      return toast.error("Message can not be empty");
     }
 
     const data = {
@@ -150,7 +151,13 @@ const SubmitForm = () => {
             variant="faded"
             minRows={1}
           />
-          <Button color="primary" isIconOnly type="submit">
+
+          <Button
+            color="primary"
+            isIconOnly
+            type="submit"
+            isLoading={isLoading}
+          >
             <LucideSend className="text-white" />
           </Button>
         </form>
