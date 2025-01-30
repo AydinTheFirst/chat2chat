@@ -11,3 +11,5 @@ export default defineConfig({
     },
   },
 });
+
+// DATABASE_URL=postgres://postgres:286ae5fe42e600ba8efc@easypanel.runocan.com:5446/aydinthefirst?sslmode=disable

@@ -20,7 +20,10 @@ model User {
   displayName String
   password    String
 
-  roles UserRole[] @default([USER])
+  tokens   Token[]
+  roles    UserRole[] @default([USER])
+  messages Message[]
+  channels Channel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -36,8 +39,39 @@ model Token {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("tokens")
+}
+
+model Channel {
+  id            String  @id @default(uuid())
+  name          String
+  ownerId       String
+  lastMessageId String?
+
+  messages Message[]
+  users    User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("channels")
+}
+
+model Message {
+  id        String @id @default(uuid())
+  channelId String
+  userId    String
+  content   String
+
+  channel Channel @relation(fields: [channelId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("messages")
 }
 
 enum UserRole {

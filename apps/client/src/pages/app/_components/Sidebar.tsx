@@ -13,10 +13,16 @@ import {
   DropdownTrigger,
   User,
 } from "@heroui/react";
-import { LucideHome, LucideLogOut, LucideSidebar } from "lucide-react";
+import {
+  LucideHome,
+  LucideLogOut,
+  LucideSidebar,
+  LucideUserPlus,
+} from "lucide-react";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useMedia } from "react-use";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 import { ThemeToggler } from "@/components";
@@ -52,14 +58,27 @@ interface AppSidebarProps {
 }
 
 // Components
-const Header = () => (
-  <Card radius="none">
-    <CardHeader className="gap-3">
-      <SidebarToggler />
-      <Divider className="h-4" orientation="vertical" />
-    </CardHeader>
-  </Card>
-);
+const Header = () => {
+  const { channelId } = useParams();
+
+  const copyChannelId = async () => {
+    await navigator.clipboard.writeText(channelId!);
+    toast.success("Channel ID copied to clipboard");
+  };
+
+  return (
+    <Card radius="none">
+      <CardHeader className="justify-between gap-3">
+        <SidebarToggler />
+        {channelId && (
+          <Button isIconOnly onPress={copyChannelId} variant="light">
+            <LucideUserPlus />
+          </Button>
+        )}
+      </CardHeader>
+    </Card>
+  );
+};
 
 const Sidebar = () => {
   const { isOpen } = useSidebar();
@@ -159,12 +178,15 @@ const SidebarItem = ({ channel }: SidebarItemProps) => {
       isPressable
       to={`/app/${channel.id}`}
     >
-      <CardBody className="grid grid-cols-12 place-items-center gap-3">
+      <CardBody className="grid grid-cols-12 gap-3">
         <Avatar className="col-span-2" name={channel.name} />
-        <div className="col-span-10 flex flex-col gap-1">
+        <div className="col-span-10 flex flex-col justify-start">
           <h4 className="font-semibold">{channel.name}</h4>
           <p className="truncate text-xs text-foreground-500">
-            Lorem ipsum dolor sit amet consectetur...
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio nisi
+            accusantium repellendus molestias hic deleniti, dolorum modi earum
+            fugiat ut aperiam impedit quo minus delectus inventore natus
+            quisquam aliquid quae.
           </p>
         </div>
       </CardBody>
