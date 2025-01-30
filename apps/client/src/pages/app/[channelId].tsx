@@ -120,6 +120,8 @@ const SubmitForm = () => {
       content: message,
     };
 
+    setIsLoading(true);
+
     try {
       await http.post("/messages", data);
       setMessage("");
@@ -127,6 +129,8 @@ const SubmitForm = () => {
     } catch (error) {
       http.handleError(error);
     }
+
+    setIsLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
